@@ -21,26 +21,57 @@ import {
   HelpCircle,
   Settings2,
   Check,
+  Sliders,
+  GitBranch,
 } from 'lucide-react';
 import { FormField, FormItem, FieldType } from '../../types';
 import { AISidekick } from './AISidekick';
+import { FormSettingsTab } from './FormSettingsTab';
+import { FormLogicTab } from './FormLogicTab';
 
 interface FormBuilderProps {
   form: FormItem;
   onChangeForm: (updated: FormItem) => void;
   onOpenLivePreview: () => void;
+  subTab?: 'build' | 'settings' | 'logic';
+  onSelectSubTab?: (tab: 'build' | 'settings' | 'logic') => void;
 }
 
 export const FormBuilder: React.FC<FormBuilderProps> = ({
   form,
   onChangeForm,
   onOpenLivePreview,
+  subTab = 'build',
+  onSelectSubTab,
 }) => {
   const [elementSearch, setElementSearch] = useState('');
   const [showAiSuggestedCard, setShowAiSuggestedCard] = useState(true);
   const [activeFieldId, setActiveFieldId] = useState<string | null>(
     form.fields.length > 0 ? form.fields[0].id : null
   );
+
+  // If subTab is settings or logic, render those dedicated views
+  if (subTab === 'settings') {
+    return (
+      <FormSettingsTab
+        form={form}
+        onChangeForm={onChangeForm}
+        onOpenLivePreview={onOpenLivePreview}
+        onSelectSubTab={onSelectSubTab}
+      />
+    );
+  }
+
+  if (subTab === 'logic') {
+    return (
+      <FormLogicTab
+        form={form}
+        onChangeForm={onChangeForm}
+        onOpenLivePreview={onOpenLivePreview}
+        onSelectSubTab={onSelectSubTab}
+      />
+    );
+  }
 
   // Basic Field Palette Items
   const basicFields = [
@@ -346,6 +377,57 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
         }}
       >
         <div className="max-w-2xl mx-auto space-y-4 pb-24">
+          {/* Quick Sub-Tab Switcher on Canvas */}
+          {onSelectSubTab && (
+            <div className="flex items-center justify-between bg-white border border-[#e5e7eb] rounded-2xl p-2 shadow-2xs">
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  id="canvas-tab-build"
+                  onClick={() => onSelectSubTab('build')}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    subTab === 'build'
+                      ? 'bg-[#3b2bee] text-white shadow-2xs'
+                      : 'text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6]'
+                  }`}
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Build</span>
+                </button>
+                <button
+                  type="button"
+                  id="canvas-tab-settings"
+                  onClick={() => onSelectSubTab('settings')}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    subTab === 'settings'
+                      ? 'bg-[#3b2bee] text-white shadow-2xs'
+                      : 'text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6]'
+                  }`}
+                >
+                  <Sliders className="w-3.5 h-3.5" />
+                  <span>Settings</span>
+                </button>
+                <button
+                  type="button"
+                  id="canvas-tab-logic"
+                  onClick={() => onSelectSubTab('logic')}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    subTab === 'logic'
+                      ? 'bg-[#3b2bee] text-white shadow-2xs'
+                      : 'text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6]'
+                  }`}
+                >
+                  <GitBranch className="w-3.5 h-3.5" />
+                  <span>Logic</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2 pr-2 text-xs font-mono text-[#6b7280]">
+                <span className="font-semibold text-[#111827]">{form.fields.length}</span> questions
+              </div>
+            </div>
+          )}
+
           {/* Card 1: Title & Description */}
           <div
             id="form-title-card"

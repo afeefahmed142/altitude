@@ -10,12 +10,15 @@ import {
   CheckCircle2,
   Clock,
   Plus,
+  Sliders,
+  GitBranch,
+  Edit3,
 } from 'lucide-react';
 import { FormItem } from '../../types';
 
 interface HomeViewProps {
   forms: FormItem[];
-  onSelectForm: (form: FormItem) => void;
+  onSelectForm: (form: FormItem, subTab?: 'build' | 'settings' | 'logic') => void;
   onCreateNewForm: () => void;
   onNavigateTab: (tab: 'forms' | 'analytics' | 'team' | 'settings') => void;
 }
@@ -107,13 +110,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#111827]">
-              Forms & Workspaces
+              Forms &amp; Workspaces
             </h2>
             <button
               onClick={() => onNavigateTab('forms')}
               className="text-xs font-semibold text-[#3b2bee] hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all in Builder</span>
+              <span>Open in Builder</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -122,8 +125,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {forms.map((form) => (
               <div
                 key={form.id}
-                onClick={() => onSelectForm(form)}
-                className="bg-white border border-[#e5e7eb] hover:border-[#3b2bee] rounded-2xl p-5 shadow-2xs hover:shadow-xs transition-all cursor-pointer group flex flex-col justify-between"
+                className="bg-white border border-[#e5e7eb] hover:border-[#cbd5e1] rounded-2xl p-5 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -132,11 +134,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     </span>
                     <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-bold font-mono">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      LIVE
+                      {form.status.toUpperCase()}
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-bold text-[#111827] group-hover:text-[#3b2bee] transition-colors mt-3">
+                  <h3
+                    onClick={() => onSelectForm(form, 'build')}
+                    className="text-sm font-bold text-[#111827] hover:text-[#3b2bee] transition-colors mt-3 cursor-pointer"
+                  >
                     {form.title}
                   </h3>
                   <p className="text-xs text-[#6b7280] mt-1 line-clamp-2 leading-relaxed">
@@ -144,11 +149,47 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   </p>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-[#f3f4f6] flex items-center justify-between text-xs text-[#6b7280] font-mono">
-                  <span>{form.responsesCount} responses</span>
-                  <span className="text-[#3b2bee] font-semibold group-hover:translate-x-0.5 transition-transform">
-                    Open →
-                  </span>
+                <div className="space-y-3 pt-4 mt-4 border-t border-[#f3f4f6]">
+                  <div className="flex items-center justify-between text-xs text-[#6b7280] font-mono">
+                    <span>{form.responsesCount} responses</span>
+                    <span>{form.fields.length} questions</span>
+                  </div>
+
+                  {/* Direct Action Buttons: Build, Settings, Logic */}
+                  <div className="grid grid-cols-3 gap-1.5 pt-1">
+                    <button
+                      type="button"
+                      id={`btn-home-build-${form.id}`}
+                      onClick={() => onSelectForm(form, 'build')}
+                      className="flex items-center justify-center gap-1 py-1.5 px-2 bg-[#f8f9ff] hover:bg-[#eef2ff] text-[#3b2bee] border border-[#e0e7ff] rounded-lg text-[11px] font-bold transition-colors cursor-pointer"
+                      title="Open Form Builder"
+                    >
+                      <Edit3 className="w-3 h-3" />
+                      <span>Build</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      id={`btn-home-settings-${form.id}`}
+                      onClick={() => onSelectForm(form, 'settings')}
+                      className="flex items-center justify-center gap-1 py-1.5 px-2 bg-[#f9fafb] hover:bg-[#f3f4f6] text-[#4b5563] hover:text-[#111827] border border-[#e5e7eb] rounded-lg text-[11px] font-bold transition-colors cursor-pointer"
+                      title="Form Settings"
+                    >
+                      <Sliders className="w-3 h-3" />
+                      <span>Settings</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      id={`btn-home-logic-${form.id}`}
+                      onClick={() => onSelectForm(form, 'logic')}
+                      className="flex items-center justify-center gap-1 py-1.5 px-2 bg-[#faf5ff] hover:bg-[#f3e8ff] text-[#7c3aed] border border-[#f3e8ff] rounded-lg text-[11px] font-bold transition-colors cursor-pointer"
+                      title="Conditional Logic"
+                    >
+                      <GitBranch className="w-3 h-3" />
+                      <span>Logic</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

@@ -20,6 +20,35 @@ export interface FormField {
   helpText?: string;
 }
 
+export interface LogicRule {
+  id: string;
+  name: string;
+  fieldId: string;
+  condition: 'equals' | 'not_equals' | 'contains' | 'is_filled' | 'is_empty';
+  value: string;
+  action: 'show_field' | 'hide_field' | 'jump_to_section' | 'require_field' | 'send_email_alert';
+  targetFieldId?: string;
+  targetMessage?: string;
+  enabled: boolean;
+}
+
+export interface FormSettings {
+  submitButtonText?: string;
+  confirmationMessage?: string;
+  redirectUrl?: string;
+  allowMultipleSubmissions?: boolean;
+  limitOnePerIP?: boolean;
+  passwordProtection?: boolean;
+  password?: string;
+  emailNotifications?: boolean;
+  notificationEmail?: string;
+  autoResponder?: boolean;
+  brandColor?: string;
+  offlineEnabled?: boolean;
+  closeAfterDate?: string;
+  maxResponses?: number;
+}
+
 export interface FormItem {
   id: string;
   title: string;
@@ -32,6 +61,8 @@ export interface FormItem {
   folderId?: string;
   headerBadgeIcon?: string;
   bannerImage?: string;
+  logicRules?: LogicRule[];
+  settings?: FormSettings;
 }
 
 export interface WorkflowStep {

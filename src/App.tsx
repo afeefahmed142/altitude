@@ -203,8 +203,9 @@ export function App() {
         {currentTab === 'home' && (
           <HomeView
             forms={forms}
-            onSelectForm={(form) => {
+            onSelectForm={(form, subTab = 'build') => {
               setActiveFormId(form.id);
+              setBuilderSubTab(subTab);
               setCurrentTab('forms');
             }}
             onCreateNewForm={handleCreateNewForm}
@@ -217,6 +218,8 @@ export function App() {
             form={activeForm}
             onChangeForm={handleUpdateActiveForm}
             onOpenLivePreview={() => setIsPreviewMode(true)}
+            subTab={builderSubTab}
+            onSelectSubTab={setBuilderSubTab}
           />
         )}
 

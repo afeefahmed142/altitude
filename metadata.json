@@ -1,0 +1,7 @@
+{
+  "name": "FormX - AI Form Builder & Precision Intelligence",
+  "description": "Enterprise-grade AI form builder, real-time analytics dashboard with NLP insights, team automation workflows, and interactive respondent view.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
